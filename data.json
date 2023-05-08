@@ -63,5 +63,11 @@
       "name": "Вино вдохновение",
       "price": 600
     }
+  ],
+  "admins": [
+    {
+      "email": "backendtesting@mail.ru",
+      "password": "KHnXBUkDykWRWv96yQXg"
+    }
   ]
 }

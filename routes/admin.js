@@ -2,9 +2,13 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
+  if (!req.session.isAdmin) {
+    return res.send("Отказано в доступе: Сессия завершена.")
+  }
+
   // TODO: Реализовать, подстановку в поля ввода формы 'Счетчики'
   // актуальных значений из сохраненых (по желанию)
-  res.render('pages/admin', { title: 'Admin page' })
+  res.render('pages/admin', { title: 'Admin' })
 })
 
 router.post('/skills', (req, res, next) => {

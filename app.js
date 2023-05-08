@@ -1,5 +1,6 @@
 const createError = require('http-errors')
 const express = require('express')
+const session = require('express-session')
 const path = require('path')
 const logger = require('morgan')
 
@@ -17,6 +18,20 @@ process.env.NODE_ENV === 'development'
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+
+app.use(
+  session({
+    secret: 'authorization',
+    key: 'KHnXBUk1DykWR4Wv96yQXg0',
+    cookie: {
+      path: '/',
+      httpOnly: true,
+      maxAge: 600000
+    },
+    saveUninitialized: false,
+    resave: false
+  })
+)
 
 app.use(express.static(path.join(__dirname, 'public')))
 
