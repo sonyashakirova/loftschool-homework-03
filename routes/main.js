@@ -18,8 +18,7 @@ router.post('/', (req, res, next) => {
     from: `"${req.body.name}" <${req.body.email}>`,
     to: config.mail.smtp.auth.user,
     subject: config.mail.subject,
-    text: `${req.body.message.trim()}\n\n
-      Отправлено с: <${req.body.email}>`
+    text: `${req.body.message.trim()}\n\nОтправлено с: <${req.body.email}>`
   }
 
   transporter.sendMail(mailOptions, function (error, info) {

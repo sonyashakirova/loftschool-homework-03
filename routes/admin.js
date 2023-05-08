@@ -1,26 +1,27 @@
 const express = require('express')
 const router = express.Router()
+const path = require('path')
+const fs = require('fs')
+
+const dbPath = path.join(process.cwd(), 'data.json');
+let data = JSON.parse(fs.readFileSync(dbPath));
 
 router.get('/', (req, res, next) => {
   if (!req.session.isAdmin) {
     return res.send("Отказано в доступе: Сессия завершена.")
   }
 
-  // TODO: Реализовать, подстановку в поля ввода формы 'Счетчики'
-  // актуальных значений из сохраненых (по желанию)
-  res.render('pages/admin', { title: 'Admin' })
+  res.render('pages/admin', { title: 'Admin', skills: data.skills })
 })
 
 router.post('/skills', (req, res, next) => {
-  /*
-  TODO: Реализовать сохранение нового объекта со значениями блока скиллов
+  data.skills = data.skills.map(skill => {
+    return {...skill, number: req.body[skill.code]}
+  });
 
-    в переменной age - Возраст начала занятий на скрипке
-    в переменной concerts - Концертов отыграл
-    в переменной cities - Максимальное число городов в туре
-    в переменной years - Лет на сцене в качестве скрипача
-  */
-  res.send('Реализовать сохранение нового объекта со значениями блока скиллов')
+  fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+
+  return res.redirect('/admin')
 })
 
 router.post('/upload', (req, res, next) => {
