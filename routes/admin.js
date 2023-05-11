@@ -37,8 +37,6 @@ router.post('/upload', (req, res, next) => {
       return res.send(`Ошибка обработки формы: ${err}`)
     }
 
-    console.log(files);
-
     const fileName = path.join(productsPath, files.photo.originalFilename);
 
     fs.rename(files.photo.filepath, fileName, (err) => {
@@ -50,8 +48,6 @@ router.post('/upload', (req, res, next) => {
     newProduct.src = `./assets/img/products/${files.photo.originalFilename}`;
     newProduct.name = fields.name;
     newProduct.price = Number(fields.price);
-
-    console.log("newProduct", newProduct);
 
     data.products.push(newProduct);
 
