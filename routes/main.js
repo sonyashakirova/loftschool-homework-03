@@ -13,8 +13,15 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
+  const { products, skills } = req.app.db.data
+
   if (!req.body.name || !req.body.email) {
-    return res.send("Заполните все обязательные поля!")
+    res.render('pages/index', {
+      title: 'Главная',
+      msgemail: 'Заполните все обязательные поля!',
+      products,
+      skills
+    })
   }
 
   const transporter = nodemailer.createTransport(config.mail.smtp)
@@ -27,10 +34,20 @@ router.post('/', (req, res, next) => {
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-      return res.send(`При отправке письма произошла ошибка! ${error}`)
+      res.render('pages/index', {
+        title: 'Главная',
+        msgemail: `При отправке письма произошла ошибка! ${error}`,
+        products,
+        skills
+      })
     }
 
-    return res.send('Письмо успешно отправлено!')
+    res.render('pages/index', {
+      title: 'Главная',
+      msgemail: 'Письмо успешно отправлено!',
+      products,
+      skills
+    })
   })
 })
 

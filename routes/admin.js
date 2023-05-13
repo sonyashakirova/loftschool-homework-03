@@ -1,3 +1,4 @@
+import createError from 'http-errors'
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
@@ -7,7 +8,7 @@ const router = express.Router()
 
 router.get('/', (req, res, next) => {
   if (!req.session.isAdmin) {
-    return res.send("Отказано в доступе: Сессия завершена.")
+    next(createError(401, 'Отказано в доступе: сессия завершена'))
   }
 
   const { skills } = req.app.db.data
@@ -22,7 +23,11 @@ router.post('/skills', (req, res, next) => {
 
   req.app.db.write()
 
-  return res.redirect('/admin')
+  res.render('pages/admin', {
+    title: 'Admin',
+    msgskill: 'Значения обновлены!',
+    skills: req.app.db.data.skills
+  })
 })
 
 router.post('/upload', (req, res, next) => {
@@ -33,14 +38,22 @@ router.post('/upload', (req, res, next) => {
 
   form.parse(req, (err, fields, files) => {
     if (err) {
-      return res.send(`Ошибка обработки формы: ${err}`)
+      res.render('pages/admin', {
+        title: 'Admin',
+        msgfile: `Ошибка обработки формы: ${err}`,
+        skills: req.app.db.data.skills
+      })
     }
 
     const fileName = path.join(productsPath, files.photo.originalFilename);
 
     fs.rename(files.photo.filepath, fileName, (err) => {
       if (err) {
-        return res.send(`Ошибка при сохранении изображения: ${err.message}`)
+        res.render('pages/admin', {
+          title: 'Admin',
+          msgfile: `Ошибка при сохранении изображения: ${err.message}`,
+          skills: req.app.db.data.skills
+        })
       }
     })
 
@@ -53,7 +66,11 @@ router.post('/upload', (req, res, next) => {
     req.app.db.write()
   })
 
-  return res.send('Новый продукт успешно сохранен!')
+  res.render('pages/admin', {
+    title: 'Admin',
+    msgfile: 'Новый продукт успешно сохранен!',
+    skills: req.app.db.data.skills
+  })
 })
 
 export default router
