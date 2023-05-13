@@ -1,12 +1,24 @@
-const createError = require('http-errors')
-const express = require('express')
-const session = require('express-session')
-const path = require('path')
-const logger = require('morgan')
+import createError from 'http-errors'
+import express from 'express'
+import session from 'express-session'
+import path from 'path'
+import logger from 'morgan'
+import url from 'url'
+import mainRouter from './routes/index.js'
+import { Low } from 'lowdb'
+import { JSONFile } from 'lowdb/node'
 
-const mainRouter = require('./routes')
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url))
 
 const app = express()
+
+const adapter = new JSONFile(path.join(__dirname, 'db.json'))
+const defaultData = { products: [], skills: [] }
+const db = new Low(adapter, defaultData)
+
+await db.read()
+
+app.db = db
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))

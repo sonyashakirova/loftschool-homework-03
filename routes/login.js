@@ -1,6 +1,9 @@
-const express = require('express')
+import express from 'express'
+import loadJSON from '../helpers/load-json.js'
+
+const { admins } = loadJSON('../db.json');
+
 const router = express.Router()
-const { admins } = require('../data.json')
 
 router.get('/', (req, res, next) => {
   res.render('pages/login', { title: 'Авторизация' })
@@ -22,4 +25,4 @@ router.post('/', (req, res, next) => {
   return res.send("Отказано в доступе: Пользователь не найден в базе данных.")
 })
 
-module.exports = router
+export default router

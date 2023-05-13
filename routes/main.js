@@ -1,10 +1,14 @@
-const express = require('express')
+import express from 'express'
+import nodemailer from 'nodemailer'
+import loadJSON from '../helpers/load-json.js'
+
+const config = loadJSON('../nodemailer.json')
+
 const router = express.Router()
-const nodemailer = require('nodemailer')
-const config = require('../nodemailer.json')
-const { products, skills } = require('../data.json')
 
 router.get('/', (req, res, next) => {
+  const { products, skills } = req.app.db.data
+
   res.render('pages/index', { title: 'Главная', products, skills })
 })
 
@@ -30,4 +34,4 @@ router.post('/', (req, res, next) => {
   })
 })
 
-module.exports = router
+export default router
